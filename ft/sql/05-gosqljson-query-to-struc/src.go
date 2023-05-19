@@ -29,6 +29,21 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	query := fmt.Sprintf("SELECT * FROM users WHERE username='%s' AND password='%s'", username, password)
 
 	resultStructs := []User{}
+	// OpenRefactory Warning:
+	// Possible SQL injection!
+	// Path:
+	//	File: src.go, Line: 27
+	//		username := r.FormValue("username")
+	//		Variable 'username' is assigned a tainted value from an external source.
+	//	File: src.go, Line: 28
+	//		password := r.FormValue("password")
+	//		Variable 'password' is assigned a tainted value from an external source.
+	//	File: src.go, Line: 29
+	//		query := fmt.Sprintf("SELECT * FROM users WHERE username='%s' AND password='%s'", username, password)
+	//		Variable 'query' is assigned a tainted value which is passed through a function call.
+	//	File: src.go, Line: 32
+	//		gosqljson.QueryToStructs(db, &resultStructs, query)
+	//		Tainted information is used in a sink.
 	gosqljson.QueryToStructs(db, &resultStructs, query)
 }
 
