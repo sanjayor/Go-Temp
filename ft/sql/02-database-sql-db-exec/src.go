@@ -19,6 +19,21 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 	query := fmt.Sprintf("INSERT INTO users(username, password) VALUES (%s, %s)", username, password)
+	// OpenRefactory Warning:
+	// Possible SQL injection!
+	// Path:
+	//	File: src.go, Line: 19
+	//		username := r.FormValue("username")
+	//		Variable 'username' is assigned a tainted value from an external source.
+	//	File: src.go, Line: 20
+	//		password := r.FormValue("password")
+	//		Variable 'password' is assigned a tainted value from an external source.
+	//	File: src.go, Line: 21
+	//		query := fmt.Sprintf("INSERT INTO users(username, password) VALUES (%s, %s)", username, password)
+	//		Variable 'query' is assigned a tainted value which is passed through a function call.
+	//	File: src.go, Line: 22
+	//		db.Exec(query)
+	//		Tainted information is used in a sink.
 	db.Exec(query)
 }
 
